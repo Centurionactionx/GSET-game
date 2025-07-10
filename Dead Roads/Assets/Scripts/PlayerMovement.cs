@@ -4,36 +4,48 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-
     public Rigidbody2D playerRb;
     public float speed;
     public float input;
     public SpriteRenderer playerSprite;
     public float jumpForce;
-    // public float gravity;   
 
     public LayerMask groundMask;
     private bool isGrounded;
     public Transform feetPosition;
     public float groundCheckCircle;
 
-    // Update is called once per frame
+    private bool jumpRequested = false;
+
     void Update()
     {
         input = Input.GetAxisRaw("Horizontal");
+
         if (input < 0){
             playerSprite.flipX = true;
         } else if (input > 0){
             playerSprite.flipX = false;
         }
 
+        if ((Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.W)) && !jumpRequested)
+        {
+            StartCoroutine(DelayedJump());
+        }
+    }
+
+    IEnumerator DelayedJump()
+    {
+        jumpRequested = true;
+        yield return new WaitForSeconds(0.05f); // jump delay
+
         isGrounded = Physics2D.OverlapCircle(feetPosition.position, groundCheckCircle, groundMask);
 
-        if (isGrounded == true && (Input.GetButton("Jump") || Input.GetKey(KeyCode.W))){
+        if (isGrounded)
+        {
             playerRb.velocity = Vector2.up * jumpForce;
         }
 
-
+        jumpRequested = false; // reset for next jump
     }
 
     void FixedUpdate()
