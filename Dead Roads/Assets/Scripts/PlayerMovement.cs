@@ -29,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
 
         isGrounded = Physics2D.OverlapCircle(feetPosition.position, groundCheckCircle, groundMask);
 
-        if (isGrounded == true && Input.GetButton("Jump")){
+        if (isGrounded == true && (Input.GetButton("Jump") || Input.GetKey(KeyCode.W))){
             playerRb.velocity = Vector2.up * jumpForce;
         }
 
