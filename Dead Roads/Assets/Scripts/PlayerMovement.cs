@@ -31,7 +31,15 @@ public class PlayerMovement : MonoBehaviour
         {
             StartCoroutine(DelayedJump());
         }
+
+        // Reset position if player falls below y = -30
+        if (transform.position.y < -30f)
+        {
+            transform.position = new Vector3(0.621f, 0.038f, 0f);
+            playerRb.velocity = Vector2.zero; // Optional: reset velocity as well
+        }
     }
+
 
     IEnumerator DelayedJump()
     {
