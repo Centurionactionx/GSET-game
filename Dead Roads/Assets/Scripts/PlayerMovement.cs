@@ -15,7 +15,13 @@ public class PlayerMovement : MonoBehaviour
     public Transform feetPosition;
     public float groundCheckCircle;
 
+    public Animator animator;
+
     private bool jumpRequested = false;
+
+    void Start(){
+        animator = GetComponent<Animator>();
+    }
 
     void Update()
     {
@@ -59,5 +65,6 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         playerRb.velocity = new Vector2(input * speed, playerRb.velocity.y);
+        animator.SetFloat("x_velocity", Mathf.Abs(playerRb.velocity.x));
     }
 }
