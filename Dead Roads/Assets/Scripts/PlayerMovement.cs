@@ -16,6 +16,8 @@ public class PlayerMovement : MonoBehaviour
     public float groundCheckCircle;
 
     public Animator animator;
+    // public Sprite defaultSprite;
+    // public Sprite jumpFlashSprite;
 
     private bool jumpRequested = false;
 
@@ -24,35 +26,46 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void Update()
-    {
-        input = Input.GetAxisRaw("Horizontal");
+{
+    input = Input.GetAxisRaw("Horizontal");
 
-        if (input < 0){
-            playerSprite.flipX = true;
-        } else if (input > 0){
-            playerSprite.flipX = false;
-        }
-
-        if ((Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.W)) && !jumpRequested)
-        {
-            StartCoroutine(DelayedJump());
-        }
-
-        // Reset position if player falls below y = -30
-        if (transform.position.y < -30f)
-        {
-            transform.position = new Vector3(0.621f, 0.038f, 0f);
-            playerRb.velocity = Vector2.zero; // Optional: reset velocity as well
-        }
+    if (input < 0){
+        playerSprite.flipX = true;
+    } else if (input > 0){
+        playerSprite.flipX = false;
     }
 
+    // Constantly check grounded status
+    isGrounded = Physics2D.OverlapCircle(feetPosition.position, groundCheckCircle, groundMask);
+
+    // Update animator with jump state
+    animator.SetBool("isJumping", !isGrounded);
+
+    if ((Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.W)) && !jumpRequested)
+    {
+        // StartCoroutine(PlayJumpFlash()); // plays sprite briefly
+        StartCoroutine(DelayedJump());
+    }
+
+
+    if (transform.position.y < -30f)
+    {
+        transform.position = new Vector3(0.621f, 0.038f, 0f);
+        playerRb.velocity = Vector2.zero;
+    }
+    }
+
+    // IEnumerator PlayJumpFlash()
+    // {
+    //     playerSprite.sprite = jumpFlashSprite;
+    //     yield return new WaitForSeconds(0.1f); // duration to show jump flash
+    //     playerSprite.sprite = defaultSprite;
+    // }
 
     IEnumerator DelayedJump()
     {
         jumpRequested = true;
         yield return new WaitForSeconds(0.05f); // jump delay
-
-        isGrounded = Physics2D.OverlapCircle(feetPosition.position, groundCheckCircle, groundMask);
 
         if (isGrounded)
         {
@@ -66,5 +79,6 @@ public class PlayerMovement : MonoBehaviour
     {
         playerRb.velocity = new Vector2(input * speed, playerRb.velocity.y);
         animator.SetFloat("x_velocity", Mathf.Abs(playerRb.velocity.x));
+        animator.SetFloat("y_velocity", playerRb.velocity.y);    
     }
 }
