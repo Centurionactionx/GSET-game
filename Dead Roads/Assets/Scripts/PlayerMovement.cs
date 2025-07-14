@@ -29,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Audio")]
     public AudioClip checkpointSoundClip;
+    public AudioSource checkpointAudioSource; // Assign this to a dedicated child AudioSource in the Inspector
     private AudioSource audioSource;
 
     void Start()
@@ -107,7 +108,9 @@ public class PlayerMovement : MonoBehaviour
 
                 if (checkpointSoundClip != null)
                 {
-                    audioSource.PlayOneShot(checkpointSoundClip);
+                    checkpointAudioSource.Stop(); // ensure clean restart
+                    checkpointAudioSource.clip = checkpointSoundClip;
+                    checkpointAudioSource.Play();
                 }
             }
         }
