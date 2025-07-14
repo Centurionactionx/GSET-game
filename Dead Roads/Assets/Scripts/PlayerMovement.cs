@@ -99,16 +99,15 @@ public class PlayerMovement : MonoBehaviour
     {
         for (int i = 0; i < checkpointPositions.Length; i++)
         {
-            if (!checkpointTriggered[i] &&
-                transform.position.x >= checkpointPositions[i].x &&
-                Mathf.Abs(transform.position.y - checkpointPositions[i].y) <= 2f)
+            if (!checkpointTriggered[i] && transform.position.x >= checkpointPositions[i].x)
             {
+                // Store both X and Y from the checkpoint location
                 lastCheckpointPosition = new Vector3(checkpointPositions[i].x, checkpointPositions[i].y, 0f);
                 checkpointTriggered[i] = true;
 
                 if (checkpointSoundClip != null)
                 {
-                    checkpointAudioSource.Stop(); // ensure clean restart
+                    checkpointAudioSource.Stop();
                     checkpointAudioSource.clip = checkpointSoundClip;
                     checkpointAudioSource.Play();
                 }
