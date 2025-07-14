@@ -47,11 +47,14 @@ public class PlayerMovement : MonoBehaviour
     {
         HandleInput();
         HandleDirection();
-        HandleGroundCheck();
+        isGrounded = Physics2D.OverlapCircle(feetPosition.position, groundCheckRadius, groundMask);
+        animator.SetBool("isJumping", !isGrounded);
+
         HandleJump();
         HandleReset();
         CheckCheckpoints();
     }
+
 
     void FixedUpdate()
     {
@@ -81,11 +84,13 @@ public class PlayerMovement : MonoBehaviour
 
     void HandleJump()
     {
-        if ((Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.W)) && !jumpRequested)
+        if (isGrounded && (Input.GetButton("Jump") || Input.GetKey(KeyCode.W)))
         {
-            StartCoroutine(DelayedJump());
+            playerRb.velocity = new Vector2(playerRb.velocity.x, jumpForce);
         }
     }
+
+
 
     void HandleReset()
     {
