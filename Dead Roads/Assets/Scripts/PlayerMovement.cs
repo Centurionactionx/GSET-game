@@ -17,6 +17,11 @@ public class PlayerMovement : MonoBehaviour
     private bool isGrounded;
     private bool jumpRequested = false;
 
+    [Header("Coyote Time")]
+    public float coyoteTimeDuration = 0.8f; // Duration in seconds
+    private float coyoteTimeCounter;
+
+
     [Header("Animation & Sprites")]
     public SpriteRenderer playerSprite;
     public Animator animator;
@@ -47,8 +52,17 @@ public class PlayerMovement : MonoBehaviour
     {
         HandleInput();
         HandleDirection();
+
+        bool wasGrounded = isGrounded;
         isGrounded = Physics2D.OverlapCircle(feetPosition.position, groundCheckRadius, groundMask);
         animator.SetBool("isJumping", !isGrounded);
+
+        // Start/reset coyote timer
+        if (isGrounded)
+            coyoteTimeCounter = coyoteTimeDuration;
+        else
+            coyoteTimeCounter -= Time.deltaTime;
+
 
         HandleJump();
         HandleReset();
@@ -84,11 +98,13 @@ public class PlayerMovement : MonoBehaviour
 
     void HandleJump()
     {
-        if (isGrounded && (Input.GetButton("Jump") || Input.GetKey(KeyCode.W)))
+        if (coyoteTimeCounter > 0f && (Input.GetButton("Jump") || Input.GetKey(KeyCode.W)))
         {
             playerRb.velocity = new Vector2(playerRb.velocity.x, jumpForce);
+            coyoteTimeCounter = 0f; // Prevent double jump during coyote
         }
     }
+
 
 
 
