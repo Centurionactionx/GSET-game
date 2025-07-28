@@ -110,7 +110,7 @@ public class PlayerMovement : MonoBehaviour
 
     void HandleReset()
     {
-        if (transform.position.y < -80f || Input.GetKeyDown(KeyCode.R))
+        if (transform.position.y < -200f || Input.GetKeyDown(KeyCode.R))
         {
             ResetPosition();
         }

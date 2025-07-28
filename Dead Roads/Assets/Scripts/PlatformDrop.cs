@@ -20,7 +20,7 @@ public class PlatformDrop : MonoBehaviour
 
     IEnumerator FallTimer(){
         GetComponent<BoxCollider2D>().enabled = false;
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.32f);
         GetComponent<BoxCollider2D>().enabled = true;
     }
 }

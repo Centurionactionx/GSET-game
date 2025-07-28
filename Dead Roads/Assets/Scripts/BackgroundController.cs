@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class BackgroundController : MonoBehaviour
 {
-    // for clone‑guarding
-    public bool isClone = false;
-
     private float startPosX, startPosY;
     private float lengthX, lengthY;
     public GameObject cam;
@@ -23,10 +20,6 @@ public class BackgroundController : MonoBehaviour
         var bounds = GetComponent<SpriteRenderer>().bounds;
         lengthX = bounds.size.x;
         lengthY = bounds.size.y;
-
-        // only the “real” (non‑clone) tile spawns the above/below copies
-        if (!isClone)
-            CreateVerticalClones();
     }
 
     void FixedUpdate()
@@ -47,26 +40,5 @@ public class BackgroundController : MonoBehaviour
         float movementX = camX * (1f - parallaxEffect);
         if (movementX > startPosX + lengthX)      startPosX += lengthX;
         else if (movementX < startPosX - lengthX) startPosX -= lengthX;
-    }
-
-    private void CreateVerticalClones()
-    {
-        // above
-        GameObject top = Instantiate(
-            gameObject,
-            transform.position + Vector3.up * lengthY,
-            transform.rotation,
-            transform.parent
-        );
-        top.GetComponent<BackgroundController>().isClone = true;
-
-        // below
-        GameObject bot = Instantiate(
-            gameObject,
-            transform.position + Vector3.down * lengthY,
-            transform.rotation,
-            transform.parent
-        );
-        bot.GetComponent<BackgroundController>().isClone = true;
     }
 }
